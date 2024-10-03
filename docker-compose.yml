@@ -1,0 +1,38 @@
+﻿name: person_management
+services:
+  web_app:
+    container_name: web_app
+    image: web_app
+    build:
+      context: .
+      dockerfile: WebApp/Dockerfile
+    ports:
+      - "5279:8080"
+    depends_on:
+      - web_api
+
+  web_api:
+    container_name: web_api
+    image: web_api
+    build:
+      context: .
+      dockerfile: WebAPI/Dockerfile
+    ports:
+      - "5295:8080"
+    depends_on:
+      - sql_server
+
+  sql_server:
+    container_name: sql_server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: Passw0rd!
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:
