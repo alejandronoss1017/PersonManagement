@@ -10,6 +10,8 @@ services:
       - "5279:8080"
     depends_on:
       - web_api
+    networks:
+      - person_network
 
   web_api:
     container_name: web_api
@@ -21,6 +23,8 @@ services:
       - "5295:8080"
     depends_on:
       - sql_server
+    networks:
+      - person_network
 
   sql_server:
     container_name: sql_server
@@ -33,6 +37,12 @@ services:
       - "1433:1433"
     volumes:
       - mssql_data:/var/opt/mssql
+    networks:
+      - person_network
 
 volumes:
   mssql_data:
+    
+networks:
+  person_management_network:
+    driver: bridge
