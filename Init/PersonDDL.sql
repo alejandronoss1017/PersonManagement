@@ -31,7 +31,7 @@ IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Profession')
         CREATE TABLE Profession (
                                     Id INT NOT NULL,
                                     Name VARCHAR(90) NOT NULL,
-                                    Description TEXT NULL,
+                                    Description VARCHAR(256) NULL,
                                     PRIMARY KEY (Id)
         );
     END
