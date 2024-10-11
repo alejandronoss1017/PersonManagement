@@ -1,0 +1,58 @@
+﻿name: person_management
+services:
+  web_app:
+    container_name: web_app
+    image: web_app
+    build:
+      context: .
+      dockerfile: WebApp/Dockerfile
+    ports:
+      - "5178:8080"
+    depends_on:
+      - sql_server
+    networks:
+      - default
+      
+  sql_server:
+    container_name: sql_server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: Passw0rd!
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Passw0rd! -Q 'SELECT 1' || exit 1" ]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+  
+  sql_server_configurator:
+    container_name: sql_server_configurator
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - ./Init:/docker-entrypoint-initdb.d
+    networks:
+      - default
+    depends_on:
+      sql_server:
+        condition: service_healthy
+    command: >
+      bash -c '
+      /opt/mssql-tools/bin/sqlcmd -S sql_server -U sa -P Passw0rd! -d master -i docker-entrypoint-initdb.d/PersonDDL.sql;
+      /opt/mssql-tools/bin/sqlcmd -S sql_server -U sa -P Passw0rd! -d PersonManagement -i docker-entrypoint-initdb.d/DataSeed.sql;
+      echo "All done!";
+      '
+
+volumes:
+  mssql_data:
+
+networks:
+  default:
+    driver: bridge

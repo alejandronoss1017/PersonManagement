@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  web_app:
+    build:
+      context: "C:\\Users\\calej\\RiderProjects\\PersonManagement"
+      dockerfile: "WebApp/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/WebApp.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/WebApp.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "web_app:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\calej\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\calej\\RiderProjects\\PersonManagement\\WebApp:/app:rw"
+    - "C:\\Users\\calej\\RiderProjects\\PersonManagement:/src:rw"
+    working_dir: "/app"
