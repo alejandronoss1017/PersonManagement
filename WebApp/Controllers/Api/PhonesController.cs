@@ -7,27 +7,20 @@ namespace WebApp.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PhonesController : ControllerBase
+    public class PhonesController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public PhonesController(AppDbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Phones
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Phone>>> GetPhones()
         {
-            return await _context.Phones.ToListAsync();
+            return await context.Phones.ToListAsync();
         }
 
         // GET: api/Phones/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Phone>> GetPhone(string id)
         {
-            var phone = await _context.Phones.FindAsync(id);
+            var phone = await context.Phones.FindAsync(id);
 
             if (phone == null)
             {
@@ -47,11 +40,11 @@ namespace WebApp.Controllers.Api
                 return BadRequest();
             }
 
-            _context.Entry(phone).State = EntityState.Modified;
+            context.Entry(phone).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,10 +66,10 @@ namespace WebApp.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<Phone>> PostPhone(Phone phone)
         {
-            _context.Phones.Add(phone);
+            context.Phones.Add(phone);
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
@@ -97,21 +90,21 @@ namespace WebApp.Controllers.Api
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhone(string id)
         {
-            var phone = await _context.Phones.FindAsync(id);
+            var phone = await context.Phones.FindAsync(id);
             if (phone == null)
             {
                 return NotFound();
             }
 
-            _context.Phones.Remove(phone);
-            await _context.SaveChangesAsync();
+            context.Phones.Remove(phone);
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool PhoneExists(string id)
         {
-            return _context.Phones.Any(e => e.Number == id);
+            return context.Phones.Any(e => e.Number == id);
         }
     }
 }

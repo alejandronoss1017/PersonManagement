@@ -7,27 +7,20 @@ namespace WebApp.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PeopleController : ControllerBase
+    public class PeopleController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public PeopleController(AppDbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/People
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Education>>> GetEducations()
         {
-            return await _context.Educations.ToListAsync();
+            return await context.Educations.ToListAsync();
         }
 
         // GET: api/People/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Education>> GetEducation(int id)
         {
-            var education = await _context.Educations.FindAsync(id);
+            var education = await context.Educations.FindAsync(id);
 
             if (education == null)
             {
@@ -47,11 +40,11 @@ namespace WebApp.Controllers.Api
                 return BadRequest();
             }
 
-            _context.Entry(education).State = EntityState.Modified;
+            context.Entry(education).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,10 +66,10 @@ namespace WebApp.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<Education>> PostEducation(Education education)
         {
-            _context.Educations.Add(education);
+            context.Educations.Add(education);
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
@@ -97,21 +90,21 @@ namespace WebApp.Controllers.Api
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEducation(int id)
         {
-            var education = await _context.Educations.FindAsync(id);
+            var education = await context.Educations.FindAsync(id);
             if (education == null)
             {
                 return NotFound();
             }
 
-            _context.Educations.Remove(education);
-            await _context.SaveChangesAsync();
+            context.Educations.Remove(education);
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool EducationExists(int id)
         {
-            return _context.Educations.Any(e => e.IdProfession == id);
+            return context.Educations.Any(e => e.IdProfession == id);
         }
     }
 }

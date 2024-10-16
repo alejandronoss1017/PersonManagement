@@ -7,27 +7,20 @@ namespace WebApp.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProfessionsController : ControllerBase
+    public class ProfessionsController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public ProfessionsController(AppDbContext context)
-        {
-            _context = context;
-        }
-
         // GET: api/Professions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Profession>>> GetProfessions()
         {
-            return await _context.Professions.ToListAsync();
+            return await context.Professions.ToListAsync();
         }
 
         // GET: api/Professions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Profession>> GetProfession(int id)
         {
-            var profession = await _context.Professions.FindAsync(id);
+            var profession = await context.Professions.FindAsync(id);
 
             if (profession == null)
             {
@@ -47,11 +40,11 @@ namespace WebApp.Controllers.Api
                 return BadRequest();
             }
 
-            _context.Entry(profession).State = EntityState.Modified;
+            context.Entry(profession).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,10 +66,10 @@ namespace WebApp.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<Profession>> PostProfession(Profession profession)
         {
-            _context.Professions.Add(profession);
+            context.Professions.Add(profession);
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
@@ -97,21 +90,21 @@ namespace WebApp.Controllers.Api
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProfession(int id)
         {
-            var profession = await _context.Professions.FindAsync(id);
+            var profession = await context.Professions.FindAsync(id);
             if (profession == null)
             {
                 return NotFound();
             }
 
-            _context.Professions.Remove(profession);
-            await _context.SaveChangesAsync();
+            context.Professions.Remove(profession);
+            await context.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool ProfessionExists(int id)
         {
-            return _context.Professions.Any(e => e.Id == id);
+            return context.Professions.Any(e => e.Id == id);
         }
     }
 }
