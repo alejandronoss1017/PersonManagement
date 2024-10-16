@@ -5,14 +5,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    
-    System.Console.WriteLine("Is defaultConnectionString null or empty?");
-    System.Console.WriteLine(string.IsNullOrEmpty(defaultConnectionString));
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
+// Add DbContext to the container
+builder.Services.AddDbContext<AppDbContext>();
 
 var app = builder.Build();
 
