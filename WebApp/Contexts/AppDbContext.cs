@@ -7,13 +7,17 @@ namespace WebApp.Contexts;
 
 public partial class AppDbContext : DbContext
 {
-    public AppDbContext()
+    private readonly IConfiguration _configuration;
+    
+    public AppDbContext(IConfiguration configuration)
     {
+        _configuration = configuration;
     }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options)
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration)
         : base(options)
     {
+        _configuration = configuration;
     }
 
     public virtual DbSet<Education> Educations { get; set; }
@@ -23,6 +27,33 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Phone> Phones { get; set; }
 
     public virtual DbSet<Profession> Professions { get; set; }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        // Get environment variables
+        var dbServer = Environment.GetEnvironmentVariable("DB_SERVER") ?? "localhost";
+        var dbDatabase = Environment.GetEnvironmentVariable("DB_DATABASE") ?? "MyDb";
+        var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "sa";
+        var dbPassword = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "Password123!";
+
+        var defaultConnectionString = _configuration.GetConnectionString("DefaultConnection");
+        
+        if (string.IsNullOrEmpty(defaultConnectionString))
+        {
+            throw new InvalidOperationException("Connection string not found.");
+        }
+    
+        defaultConnectionString = defaultConnectionString
+            .Replace("${DB_SERVER}", dbServer)
+            .Replace("${DB_DATABASE}", dbDatabase)
+            .Replace("${DB_USER}", dbUser)
+            .Replace("${DB_PASSWORD}", dbPassword);
+    
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(defaultConnectionString);
+        }
+    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
