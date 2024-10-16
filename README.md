@@ -35,7 +35,12 @@ Para ejecutar la solución completa utilizando Docker Compose, sigue estos pasos
     http://localhost:5178
     ```
 
-4. Para detener los contenedores:
+4. Accede al los servicios de la API en tu navegador:
+    ```
+    http://localhost:5178/swagger
+    ```
+
+5. Para detener los contenedores:
     ```sh
     docker-compose down
     ```
