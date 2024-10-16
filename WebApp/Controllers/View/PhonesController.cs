@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Contexts;
 using WebApp.Entities;
 
-namespace WebApp.Controllers;
+namespace WebApp.Controllers.View;
 
 public class PhonesController(AppDbContext context) : Controller
 {

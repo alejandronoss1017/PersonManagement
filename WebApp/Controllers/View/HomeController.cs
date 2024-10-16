@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
 
-namespace WebApp.Controllers;
+namespace WebApp.Controllers.View;
 
 public class HomeController(ILogger<HomeController> logger) : Controller
 {

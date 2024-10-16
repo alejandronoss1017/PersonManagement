@@ -3,17 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Contexts;
 using WebApp.Entities;
 
-namespace WebApp.Controllers;
+namespace WebApp.Controllers.View;
 
-public class PeopleController(AppDbContext context) : Controller
+public class ProfessionsController(AppDbContext context) : Controller
 {
-    // GET: People
+    // GET: Professions
     public async Task<IActionResult> Index()
     {
-        return View(await context.People.ToListAsync());
+        return View(await context.Professions.ToListAsync());
     }
 
-    // GET: People/Details/5
+    // GET: Professions/Details/5
     public async Task<IActionResult> Details(int? id)
     {
         if (id == null)
@@ -21,39 +21,39 @@ public class PeopleController(AppDbContext context) : Controller
             return NotFound();
         }
 
-        var person = await context.People
+        var profession = await context.Professions
             .FirstOrDefaultAsync(m => m.Id == id);
-        if (person == null)
+        if (profession == null)
         {
             return NotFound();
         }
 
-        return View(person);
+        return View(profession);
     }
 
-    // GET: People/Create
+    // GET: Professions/Create
     public IActionResult Create()
     {
         return View();
     }
 
-    // POST: People/Create
+    // POST: Professions/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,LastName,Gender,Age")] Person person)
+    public async Task<IActionResult> Create([Bind("Id,Name,Description")] Profession profession)
     {
         if (ModelState.IsValid)
         {
-            context.Add(person);
+            context.Add(profession);
             await context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        return View(person);
+        return View(profession);
     }
 
-    // GET: People/Edit/5
+    // GET: Professions/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -61,22 +61,22 @@ public class PeopleController(AppDbContext context) : Controller
             return NotFound();
         }
 
-        var person = await context.People.FindAsync(id);
-        if (person == null)
+        var profession = await context.Professions.FindAsync(id);
+        if (profession == null)
         {
             return NotFound();
         }
-        return View(person);
+        return View(profession);
     }
 
-    // POST: People/Edit/5
+    // POST: Professions/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName,Gender,Age")] Person person)
+    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Profession profession)
     {
-        if (id != person.Id)
+        if (id != profession.Id)
         {
             return NotFound();
         }
@@ -85,12 +85,12 @@ public class PeopleController(AppDbContext context) : Controller
         {
             try
             {
-                context.Update(person);
+                context.Update(profession);
                 await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PersonExists(person.Id))
+                if (!ProfessionExists(profession.Id))
                 {
                     return NotFound();
                 }
@@ -101,10 +101,10 @@ public class PeopleController(AppDbContext context) : Controller
             }
             return RedirectToAction(nameof(Index));
         }
-        return View(person);
+        return View(profession);
     }
 
-    // GET: People/Delete/5
+    // GET: Professions/Delete/5
     public async Task<IActionResult> Delete(int? id)
     {
         if (id == null)
@@ -112,33 +112,33 @@ public class PeopleController(AppDbContext context) : Controller
             return NotFound();
         }
 
-        var person = await context.People
+        var profession = await context.Professions
             .FirstOrDefaultAsync(m => m.Id == id);
-        if (person == null)
+        if (profession == null)
         {
             return NotFound();
         }
 
-        return View(person);
+        return View(profession);
     }
 
-    // POST: People/Delete/5
+    // POST: Professions/Delete/5
     [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var person = await context.People.FindAsync(id);
-        if (person != null)
+        var profession = await context.Professions.FindAsync(id);
+        if (profession != null)
         {
-            context.People.Remove(person);
+            context.Professions.Remove(profession);
         }
 
         await context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
 
-    private bool PersonExists(int id)
+    private bool ProfessionExists(int id)
     {
-        return context.People.Any(e => e.Id == id);
+        return context.Professions.Any(e => e.Id == id);
     }
 }
