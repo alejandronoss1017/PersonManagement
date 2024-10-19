@@ -6,6 +6,11 @@ services:
     build:
       context: .
       dockerfile: WebApp/Dockerfile
+    environment:
+      DB_SERVER: sql_server
+      DB_DATABASE: PersonManagement
+      DB_USER: sa
+      DB_PASSWORD: Passw0rd!
     ports:
       - "5178:8080"
     depends_on:
