@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Contexts;
-using WebApp.Entities;
+using WebApp.Models.Entities;
 
 namespace WebApp.Controllers.Api
 {

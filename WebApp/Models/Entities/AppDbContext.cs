@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApp.Entities;
 
-namespace WebApp.Contexts;
+namespace WebApp.Models.Entities;
 
 public partial class AppDbContext : DbContext
 {

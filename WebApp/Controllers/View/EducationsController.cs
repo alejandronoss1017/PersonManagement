@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Contexts;
-using WebApp.Entities;
+using WebApp.Models.Entities;
 
 namespace WebApp.Controllers.View;
 

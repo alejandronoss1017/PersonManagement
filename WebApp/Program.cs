@@ -1,4 +1,4 @@
-using WebApp.Contexts;
+using WebApp.Models.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
